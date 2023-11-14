@@ -15,17 +15,21 @@
 # limitations under the License.
 ##############################################################################
 
+
 # Start from a base image with bash and other utilities
-FROM debian:latest
+FROM ubuntu:latest
 
 # Set workdir in /usr/src/app
 WORKDIR /usr/src/app
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    diffutils \
-    grep
+RUN apt update
+RUN apt upgrade -y
+RUN apt install -y wget
+RUN apt install -y diffutils 
+RUN apt install -y grep
+RUN apt install -y apache2
+RUN apt install -y apache2-utils
 
 # Copy your bash script into the container
 COPY autoupdate.sh .
@@ -33,5 +37,10 @@ COPY autoupdate.sh .
 # Give execution permissions to the script
 RUN chmod +x autoupdate.sh
 
-# Run the command on container startup
-CMD ["./autoupdate.sh"]
+# Expose the Port
+
+EXPOSE 8090
+
+# Start the Apache Webserver
+
+CMD apachectl -D FOREGROUND
